@@ -37,12 +37,14 @@ def plot_tsp(p, x_coord, W, W_val, W_target, title="default"):
     
     G = nx.from_numpy_matrix(W_val)
     pos = dict(zip(range(len(x_coord)), x_coord.tolist()))
+    labels = dict(zip(range(len(x_coord)), range(len(x_coord))))
     adj_pairs = _edges_to_node_pairs(W)
     target_pairs = _edges_to_node_pairs(W_target)
     colors = ['g'] + ['b'] * (len(x_coord) - 1)  # Green for 0th node, blue for others
-    nx.draw_networkx_nodes(G, pos, node_color=colors, node_size=50)
+    nx.draw_networkx_nodes(G, pos, node_color=colors, node_size=150)
     nx.draw_networkx_edges(G, pos, edgelist=adj_pairs, alpha=0.3, width=0.5)
     nx.draw_networkx_edges(G, pos, edgelist=target_pairs, alpha=1, width=1, edge_color='r')
+    nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color='w')
     p.set_title(title)
     return p
 
@@ -79,7 +81,7 @@ def plot_tsp_heatmap(p, x_coord, W_val, W_pred, title="default"):
     pos = dict(zip(range(len(x_coord)), x_coord.tolist()))
     node_pairs, edge_color = _edges_to_node_pairs(W_pred)
     node_color = ['g'] + ['b'] * (len(x_coord) - 1)  # Green for 0th node, blue for others
-    nx.draw_networkx_nodes(G, pos, node_color=node_color, node_size=50)
+    nx.draw_networkx_nodes(G, pos, node_color=node_color, node_size=100)
     nx.draw_networkx_edges(G, pos, edgelist=node_pairs, edge_color=edge_color, edge_cmap=plt.cm.Reds, width=0.75)
     p.set_title(title)
     return p
@@ -102,7 +104,7 @@ def plot_predictions(x_nodes_coord, x_edges, x_edges_values, y_edges, y_pred_edg
     y_bins = y.argmax(dim=3)  # Binary predictions: B x V x V
     y_probs = y[:,:,:,1]  # Prediction probabilities: B x V x V
     for f_idx, idx in enumerate(np.random.choice(len(y), num_plots, replace=False)):
-        f = plt.figure(f_idx, figsize=(10, 5))
+        f = plt.figure(f_idx, figsize=(19, 9))
         x_coord = x_nodes_coord[idx].cpu().numpy()
         W = x_edges[idx].cpu().numpy()
         W_val = x_edges_values[idx].cpu().numpy()
@@ -134,7 +136,7 @@ def plot_predictions_beamsearch(x_nodes_coord, x_edges, x_edges_values, y_edges,
     y_bins = y.argmax(dim=3)  # Binary predictions: B x V x V
     y_probs = y[:,:,:,1]  # Prediction probabilities: B x V x V
     for f_idx, idx in enumerate(np.random.choice(len(y), num_plots, replace=False)):
-        f = plt.figure(f_idx, figsize=(15, 5))
+        f = plt.figure(f_idx, figsize=(30, 9))
         x_coord = x_nodes_coord[idx].cpu().numpy()
         W = x_edges[idx].cpu().numpy()
         W_val = x_edges_values[idx].cpu().numpy()
